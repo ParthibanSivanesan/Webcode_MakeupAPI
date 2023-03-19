@@ -1,4 +1,4 @@
-
+"use strict";
 
 let api = 'http://makeup-api.herokuapp.com/api/v1/products.json'
 //let api2 = 'http://makeup-api.herokuapp.com/api/v1/products.json'
