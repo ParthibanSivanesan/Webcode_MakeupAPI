@@ -1,5 +1,5 @@
-let api = 'http://makeup-api.herokuapp.com/api/v1/products.json'
-//let api2 = 'http://makeup-api.herokuapp.com/api/v1/products.json'
+let api = 'https://makeup-api.herokuapp.com/api/v1/products.json'
+//let api2 = 'https://makeup-api.herokuapp.com/api/v1/products.json'
 
 var c2= [];
 //let c1 = {};
