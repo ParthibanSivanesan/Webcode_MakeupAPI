@@ -1,31 +1,31 @@
-"use strict";
-
-let api = 'https://makeup-api.herokuapp.com/api/v1/products.json'
+let api = 'http://makeup-api.herokuapp.com/api/v1/products.json'
 //let api2 = 'http://makeup-api.herokuapp.com/api/v1/products.json'
 
 var c2= [];
+//let c1 = {};
+var wholeParentarea = document.querySelector('.parent');
+
 
 async function fetchingfunction(){
   try{  
    let p1 = await fetch(api);
     
    // console.log(p1);
-   const c1 = await p1.json();
+   c1 = await p1.json();
    
   //c2=[...c1];
 
    console.log('Entire Data',c1);
    
    //HTML DOM Elements:
-   let wholeParentarea = document.querySelector('.parent');
+   var wholeParentarea = document.querySelector('.parent');
    //To taking Data:
    for(let i of c1){
     var parentContainer = document.createElement("div");
      parentContainer.classList.add('box')
      try{
-        //console.log("Brand:",i.brand);
+        
        let obj = {
-           //"Product Id": i.id,
           "Product Name": i.name,
           "Brand": i.brand,
           "Product Price": i.price_sign + ' ' + i.price,
@@ -38,6 +38,7 @@ async function fetchingfunction(){
         if(obj[j].includes('api_featured_image')){
             var imgdata = document.createElement("img");
             imgdata.setAttribute('src',obj[j]);
+            imgdata.setAttribute('alt',obj['Product Name']);
             imgdata.classList.add('image')
             parentContainer.append(imgdata);
             continue;
@@ -71,66 +72,64 @@ async function fetchingfunction(){
      wholeParentarea.append(parentContainer);
      console.log(parentContainer);
 
-    //Searching Input
-   //  var userInput = document.getElementById('userinput');
-
-   //  userInput.addEventListener((e) => {
-   //    var val1 = e.target.value;
-   //    console.log(`You searched for ${val1}`);
-   //    // for(let k of Object.keys(obj)){
-   //    //  if(obj[k].innerHTML.tolowercase().includes(value)){
-   //    //    console.log(`You searched for ${userInput.value}`);
-   //    //  }
-   //    // } 
-        
-   //  });
-   
-   // sendinginput(c1);
-   
      }
      catch{
         console.log('no data');
      }
 
    }
-   //c2 ={...c1};
-   //console.log(c2);
-   // sendinginput(c2);
-
-   return c1;
-
 }
 catch{
     console.log('Error Occured');
 }
-
+return c1, c2;
 }
 
 fetchingfunction();
 
-//To find the Related word from Search Bar
+//To Search Input:
+const searchInput = document.getElementById("userinput");
 
-function finduserinput(){
-
-   try{
-      let x = document.getElementById('userinput');
-      //input = input.tolowercase();
-      
-      console.log(x.value);
-
-      for(let k of Object.keys(obj)){
-         console.log(obj[k]);
-           if(obj[k].includes('x.value')){
-              console.log("Found",x.value);
-              alert(`you searched ${x.value}`);
-              obj[k].style.display = "block";
-           }
-           else{
-             alert('Not found');
-           }
-      }
-   }
-   catch{
-     console.log("Not found");
-   }
+function sendfunc(data){
+    return data.map(({name, brand, price, price_sign, api_featured_image, product_link, description}) => displayfunc(name, brand, price, price_sign, api_featured_image, product_link, description)).join('');
 }
+
+function displayfunc(name, brand, price, price_sign, api_featured_image, product_link, description){
+    return `
+    <div class="parent"> 
+     <div class="box">
+       <p><b>${name}</b></p>
+       <p>By ${brand}</p>
+       <p><b>${price_sign + ' ' + price}</b></p>
+       <img class="image" src='${api_featured_image}' alt='${name}'/>
+       <p><button class="button"><a href='${product_link}' target="_blank"><b>Buy</b></a></button></p>
+       <p class="description"><a href="javascript:alert('${description})">Read More</a></p>
+     </div>
+   </div>
+    
+    `;
+}
+
+function notfoundfunc(){
+    return `
+    <div class="parent"> 
+    <div class="box">
+    No Results Found
+    </div>
+   </div>
+    
+    `;
+}
+
+
+if(searchInput){
+searchInput.addEventListener("input", (e) =>{
+   const value1 = [];
+   value1.push(e.target.value.toUpperCase());
+   const strinp = value1.join('');
+   console.log(strinp);
+   const datafiltered = c1.filter(p => p.name.includes(strinp));
+   wholeParentarea.innerHTML = datafiltered.length ? sendfunc(datafiltered) : notfoundfunc();
+})
+}
+
