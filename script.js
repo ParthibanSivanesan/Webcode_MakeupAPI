@@ -1,37 +1,49 @@
 let api = 'https://makeup-api.herokuapp.com/api/v1/products.json'
-//let api2 = 'https://makeup-api.herokuapp.com/api/v1/products.json'
 
-var c2= [];
-//let c1 = {};
 var wholeParentarea = document.querySelector('.parent');
 
 
-async function fetchingfunction(){
+// Variables to keep track of the current page and page size
+let currentPage = 1;
+let pageSize = 30; // Number of items per page
+
+
+async function fetchingData(){
   try{  
+  
+   //const api = `https://makeup-api.herokuapp.com/api/v1/products.json?currentPage=${currentPage}&pageSize=${pageSize}`;
+
    let p1 = await fetch(api);
-    
    // console.log(p1);
-   c1 = await p1.json();
-   
-  //c2=[...c1];
+   let c1 = await p1.json();
 
    console.log('Entire Data',c1);
-   
+   //console.log(c1.length);
    //HTML DOM Elements:
    var wholeParentarea = document.querySelector('.parent');
-   //To taking Data:
-   for(let i of c1){
-    var parentContainer = document.createElement("div");
+   var k = 1, arrindex = 0, i=0;
+
+fetchingfunction(currentPage, arrindex, k);
+
+
+function fetchingfunction(currentPage, arrindex, k){   
+  clearPage();
+  i = arrindex;
+  for(i=arrindex; i<c1.length; i++){
+    console.log("k", k);
+    console.log("i", i);
+    if(k <= 30){
+     var parentContainer = document.createElement("div");
      parentContainer.classList.add('box')
      try{
         
        let obj = {
-          "Product Name": i.name,
-          "Brand": i.brand,
-          "Product Price": i.price_sign + ' ' + i.price,
-          "Product Image": i.api_featured_image,
-          "Product Link": i.product_link,
-          "Prodcut Description": i.description,
+          "Product Name": c1[i].name,
+          "Brand": c1[i].brand,
+          "Product Price": c1[i].price_sign + ' ' + c1[i].price,
+          "Product Image": c1[i].api_featured_image,
+          "Product Link": c1[i].product_link,
+          "Prodcut Description": c1[i].description,
         }
       
      for(let j of Object.keys(obj)){
@@ -65,71 +77,127 @@ async function fetchingfunction(){
          prodlink.classList.add('button');
          parentContainer.append(prodlink);
         }
-      //   var para1 = document.createElement('p');
-      //   para1.innerHTML = `<label><b>${j}</b></label> : ${obj[j]}`;
-      //   parentContainer.append(para1);
      }
      wholeParentarea.append(parentContainer);
      console.log(parentContainer);
+     
 
      }
-     catch{
-        console.log('no data');
+     catch(err){
+        console.log('no data', err);
      }
 
-   }
-}
-catch{
-    console.log('Error Occured');
-}
-return c1, c2;
+     
+k++;//if loop end
+}else if(k >30 || i >= 929){
+
+//Page Buttons
+var parentButton = document.createElement("div");
+parentButton.classList.add("button-parent");
+
+const firstpage = document.createElement("button");
+firstpage.classList.add("page-button");
+firstpage.innerHTML = "First";
+parentButton.append(firstpage);
+
+const previous = document.createElement("button");
+previous.classList.add("page-button");
+previous.innerHTML = "« Previous";
+parentButton.append(previous);
+
+if(currentPage == 1){
+  previous.disabled = true;
+  firstpage.disabled = true;
 }
 
-fetchingfunction();
+const next = document.createElement("button");
+next.classList.add("page-button");
+next.innerHTML = "Next »";
+parentButton.append(next);
+
+const lastpage = document.createElement("button");
+lastpage.classList.add("page-button");
+lastpage.innerHTML = "Last";
+parentButton.append(lastpage);
+
+wholeParentarea.append(parentButton);
+
+ firstpage.addEventListener("click", async function firstPage(){
+  arrindex = 0;
+  k = 1;
+  currentPage = 1;
+  await fetchingfunction(currentPage, arrindex, k);
+ });
+
+
+  previous.addEventListener("click", async function previousPage() {
+    console.log("prev");
+    k = 1;
+    currentPage--;
+    arrindex = i-60;
+    await fetchingfunction(currentPage, arrindex, k);
+  });
+
+  
+  next.addEventListener("click", async function nextPage() {
+      console.log("next");
+      k = 1;
+      currentPage++;
+      arrindex = i;
+      await fetchingfunction(currentPage, arrindex, k);
+    
+  });
+
+  lastpage.addEventListener("click", async function lastPage(){
+    arrindex = (c1.length)-1;
+    k = 1;
+    currentPage = Math.ceil((c1.length)/30);
+    await fetchingfunction(currentPage, arrindex, k);
+    parentButton.append(firstpage);
+    parentButton.append(previous);
+    parentButton.append(next);
+    parentButton.append(lastpage);
+    wholeParentarea.append(parentButton);
+        next.disabled = true;
+        lastpage.disabled = true;
+            
+          previous.disabled = false;
+          firstpage.disabled = false;
+
+   });
+
+  return;
+}
+
+}//for i loop
+}
+
+function clearPage(){
+  wholeParentarea.innerHTML = '';
+}
+
+
+}
+catch(err){
+    console.log('Error Occured',err);
+}
+
+}
+
+fetchingData();
 
 //To Search Input:
-const searchInput = document.getElementById("userinput");
+function searchuserinput(){
+  let userInput = document.getElementById("userinput").value;
+  userInput = userInput.toLowerCase();
 
-function sendfunc(data){
-    return data.map(({name, brand, price, price_sign, api_featured_image, product_link, description}) => displayfunc(name, brand, price, price_sign, api_featured_image, product_link, description)).join('');
+  let search = document.getElementsByClassName("box");
+  
+  for(var i=0; i<search.length; i++){
+      if(!search[i].innerHTML.toLowerCase().includes(userInput)){
+          search[i].style.display = "none";
+      }else{
+          search[i].style.display = "list-item";
+      }
+  }
 }
-
-function displayfunc(name, brand, price, price_sign, api_featured_image, product_link, description){
-    return `
-    <div class="parent"> 
-     <div class="box">
-       <p><b>${name}</b></p>
-       <p>By ${brand}</p>
-       <p><b>${price_sign + ' ' + price}</b></p>
-       <img class="image" src='${api_featured_image}' alt='${name}'/>
-       <p><button class="button"><a href='${product_link}' target="_blank"><b>Buy</b></a></button></p>
-       <p class="description"><a href="javascript:alert('${description})">Read More</a></p>
-     </div>
-   </div>
-    
-    `;
-}
-
-function notfoundfunc(){
-    return `
-    <div class="parent"> 
-    <div class="box">
-    No Results Found
-    </div>
-   </div>
-    
-    `;
-}
-
-
-if(searchInput){
-searchInput.addEventListener("input", (e) =>{
-   const value1 = [];
-   value1.push(e.target.value.toUpperCase());
-   const strinp = value1.join('');
-   console.log(strinp);
-   const datafiltered = c1.filter(p => p.name.includes(strinp));
-   wholeParentarea.innerHTML = datafiltered.length ? sendfunc(datafiltered) : notfoundfunc();
-})
-}
-
