@@ -6,10 +6,11 @@
 
 
 .header{
-    display: grid;
+    display: flex;
     background-color:rgb(20, 19, 93);
-    color:white
-    
+    color:rgb(193, 188, 188);
+    margin: 0px;
+    justify-content: center;
 }
 
 
@@ -20,10 +21,10 @@
 
 
 .box{
-    width: 100%;
-    margin: 0 auto;
+    width: 400px;
+    margin: 50px;
     padding: 10px;
-    max-width: 500px;
+    /* max-width: 500px; */
     box-shadow: 0 0.6rem 2rem rgba(26, 26, 26, 0.2);
     border-radius: 10px;
     transition: 0.4s all;
@@ -31,10 +32,13 @@
 
 
 .image{
-   display: block;
-   width: 200px;
-   height: 200px;
-   border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: auto;
+    width: 200px;
+    height: 200px;
+    border-radius: 10px;
 }
 
 
@@ -47,6 +51,7 @@ button{
     width: 100px;
     border-radius: 10px;
     box-shadow: 0 0.6rem 2rem rgba(26, 26, 26, 0.2);
+    text-decoration: none;
 }
 
 
@@ -55,10 +60,19 @@ button:hover{
 }
 
 #userinput{
-    
-    padding: 10px;
-    border-radius: 10px;
-    border-color: black;
+   display: flex;
+   width: 35vw;
+   height: 6vh;
+   box-sizing: border-box;
+   border-radius: 6px;
+   border: 2px solid rgb(35, 36, 35);
+   font-size: large;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   margin: auto;
+   margin-top: 20px;
+  
 }
 
 .button2{
@@ -66,4 +80,25 @@ button:hover{
     padding: 10px;
     border-radius: 10px;
     border-color: black;
+}
+
+.page-button{
+  background-color: #008CBA;
+  width: auto;
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+}
+
+.button-parent{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: auto;
 }
