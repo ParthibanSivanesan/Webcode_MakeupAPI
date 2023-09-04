@@ -3,22 +3,24 @@
     font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   }
 
-
-
 .header{
     display: flex;
-    background-color:rgb(20, 19, 93);
-    color:rgb(193, 188, 188);
+    color:rgb(20, 19, 93);
     margin: 0px;
-    justify-content: center;
+   justify-content: center;
 }
 
+.logo-cls{
+  width: 60px;
+  height: 60px;
+  padding: 10px;
+  border-radius: 30px;
+}
 
 .parent{
     display: flex;
     flex-wrap: wrap;
 }
-
 
 .box{
     width: 400px;
